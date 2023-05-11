@@ -1,0 +1,108 @@
+
+<!-- Navegación  Aumentando-->
+<div class="sticky-top">
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">Red de profesionales Cotopaxi</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menú
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto flex-wrap align-items-center">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/">Inicio</a>
+                    {{#each archivos}}
+                    <li class="nav-item mx-0 mx-lg-1">
+                        {{#with (removeExtension this) as |filename|}}
+                       
+                        <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/{{filename}}">{{filename}}</a>
+                       
+                        {{/with}}
+
+                    </li>
+                    {{/each}}
+
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  if (window.location.href.includes('/adm')) {
+    // Estás en la página de administrador, muestra el botón
+    var botonAdministrador = '<a class="nav-link py-3 px-0 px-lg-3 rounded" >Agregar</a>';
+    $('.navbar-nav').prepend(botonAdministrador);
+    
+    $('.nav-link:first').click(function(event) {
+      event.preventDefault();
+
+      // Capturar la respuesta del usuario en el prompt
+      var nuevoTitulo = prompt('Ingresa un nuevo título:');
+
+      // Si el usuario presiona "Cancelar" en el prompt, no se hace nada
+      if (nuevoTitulo === null) {
+        return;
+      }
+
+      console.log(nuevoTitulo);
+
+      // Crea una nueva tarjeta con el título ingresado
+      var nuevaTarjeta =
+        '<div class="card">' +
+        '<div class="card-body">' +
+        '<h5 class="card-title">' +
+        nuevoTitulo +
+        '</h5>' +
+        '</div>' +
+        '</div>';
+
+      // Agrega la nueva tarjeta al contenedor deseado (por ejemplo, al final del cuerpo del documento)
+      $('body').append(nuevaTarjeta);
+
+      // Crea el archivo con el nombre del nuevo título y el contenido del index.hbs
+      var archivoNombre = nuevoTitulo + '.hbs';
+      var nombreBDD = nuevoTitulo + 'Noticias';
+      var archivoContenido = `Contenido del archivo ${nuevoTitulo}:\n\n${archivoContenido}`;
+
+    // Hacer una solicitud AJAX para crear la nueva colección
+        $.ajax({
+        url: '/api/crear-coleccion',
+        type: 'POST',
+        data: { titulo: archivoNombre,contenido: archivoContenido, nombre:nombreBDD },
+        success: function(response) {
+          console.log('Archivo creado exitosamente:', response);
+        },
+        error: function(error) {
+          console.log('Error al crear el archivo:', error);
+        }
+      });
+  
+
+
+
+      $.ajax({
+        url: '/crear-archivo',
+        type: 'POST',
+        data: { nombre: archivoNombre, contenido: archivoContenido },
+        success: function(response) {
+          console.log('Archivo creado exitosamente:', response);
+        },
+        error: function(error) {
+          console.log('Error al crear el archivo:', error);
+        }
+      });
+
+      window.location.href = "/adm";
+    });
+  }
+});
+
+
+</script>

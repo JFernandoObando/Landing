@@ -1,0 +1,48 @@
+ {{#each tasks}}
+  <div class="main-timeline-2">
+        <div class=" timeline-2 {{index}}-2">
+            <section class="portfolio" id="portfolio" >
+                        <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal{{@index}} ">
+                                <div class="card">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(135).webp" class="card-img-top"
+                                    alt="Responsive image">
+                                <div class="card-body p-4">
+                                    <h4 class="fw-bold mb-4">{{title}}</h4>
+                                    <p class="text-muted mb-4"><i class="far fa-clock" aria-hidden="true"></i> 2017</p>
+                                    <p class="mb-0">{{description}}</p>
+                                </div>
+                                </div>
+                                <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                                    <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                                </div>
+                        </div>
+      <button type="button" class="btn btn-danger borrarButton" data-id="{{_id}}">Eliminar Noticia</button>
+
+            </section>
+        </div>
+
+    {{/each}}
+
+    <script>
+   $(document).ready(function() {
+  // Asociar el evento de clic a los botones de eliminación
+  $('.borrarButton').on('click', function() {
+    var id = $(this).data('id'); // Obtén el ID de la noticia del atributo de datos personalizado
+console.log(id)
+    // Realiza la solicitud AJAX para eliminar la noticia
+$.ajax({
+  url: "/delete/" + id,
+  type: 'POST',
+  success: function(response) {
+    console.log('Noticia eliminada exitosamente');
+     window.location.href = "/adm";
+  },
+  error: function(error) {
+    console.log('Error al eliminar la noticia:', error);
+  }
+});
+  });
+});
+
+
+    </script>
